@@ -4,7 +4,7 @@ A [Claude Code](https://claude.com/claude-code) skill that converts text posts i
 
 ![Preview](preview.png)
 
-Paste a text post (or a Markdown file) into Claude, say "сделай карусель" / "make a carousel", and get a browser preview with exportable PNGs or a single PDF. Composable design system with **four independent style axes**, 12 slide types, 8 background decorations, and multi-platform format presets.
+Paste a text post (or a Markdown file) into Claude, say "make a carousel", and get a browser preview with exportable PNGs or a single PDF. Composable design system with **four independent style axes**, 12 slide types, 8 background decorations, and multi-platform format presets.
 
 ## Features
 
@@ -24,7 +24,6 @@ Paste a text post (or a Markdown file) into Claude, say "сделай карус
 - **Adaptive typography** — font size scales to content length
 - **Modular architecture** — content in `src/slides.ts`, engine in `src/app/CarouselApp.tsx` + `src/lib/`
 - **Live preview toolbar** — switch format, purpose, font, surface, accent, and background in the browser without editing code
-- **RU/EN toolbar** — UI labels toggle between Russian and English
 - **PNG export** — download individual slides or all at once via `html-to-image`
 - **PDF export** — all slides in a single file via jsPDF (JPEG-compressed, ~5–8 MB for 10 slides)
 
@@ -45,9 +44,7 @@ Paste a text post (or a Markdown file) into Claude, say "сделай карус
    ```
 
 3. In Claude Code, trigger the skill by pasting a post and saying:
-   > Сделай карусель из этого поста
-   >
-   > or: Make a Threads carousel from this text
+   > Make a Threads carousel from this text
 
 Claude reads the text, splits it into slides, edits `src/slides.ts` in a temporary working copy of the template, launches `bun dev` on port 3333, and hands you the preview URL.
 
@@ -266,7 +263,6 @@ Add a new entry to `FORMAT_PRESETS` in `src/lib/presets.ts` and update the `Form
 - [x] **Mono + Condensed fonts + italic-box highlight + ruled-paper bg** — shipped in [v1.2.0](https://github.com/itchernetski/threads-carousel-claude-skill/releases/tag/v1.2.0).
 - [ ] **Satori + Resvg server-side export** — replace browser-based `html-to-image` with headless PNG generation for sharper output and CLI use. See [Slashgear/linkedin-carousel-gen](https://github.com/Slashgear/linkedin-carousel-gen) for reference.
 - [ ] **Per-slide background override** — different bg type per slide.
-- [ ] **Cyrillic-optimized defaults** — adjust adaptive sizing thresholds for Russian/Cyrillic text density.
 
 ## Feedback
 
@@ -283,7 +279,7 @@ Feature requests and ideas: [Telegram discussion](https://t.me/beyondcoinkeeper/
 
 Thanks to everyone who shipped improvements:
 
-- [@azdaev](https://github.com/azdaev) — `points` slide type, 3-axis style system, `wide-16x9` format, PDF export, runtime format switcher, RU/EN toolbar ([#1](https://github.com/itchernetski/threads-carousel-claude-skill/pull/1))
+- [@azdaev](https://github.com/azdaev) — `points` slide type, 3-axis style system, `wide-16x9` format, PDF export, runtime format switcher  ([#1](https://github.com/itchernetski/threads-carousel-claude-skill/pull/1))
 
 ## License
 

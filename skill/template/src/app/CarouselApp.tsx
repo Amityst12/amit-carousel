@@ -1914,7 +1914,7 @@ function SlidePreview({
 // I18N
 // ============================================================
 
-type Lang = "en" | "ru";
+type Lang = "en";
 
 const T = {
   en: {
@@ -1947,36 +1947,6 @@ const T = {
       fuchsia: "Fuchsia", pink: "Pink", amber: "Amber",
     } as Record<AccentId, string>,
   },
-  ru: {
-    appTitle: "Threads Carousel",
-    rowFont: "Шрифт",
-    rowSurface: "Фон",
-    rowAccent: "Акцент",
-    rowBg: "Декор",
-    rowMode: "Режим",
-    rowFormat: "Формат",
-    btnPdf: "PDF",
-    btnAll: "PNG",
-    statusDone: "Готово!",
-    statusExport: (i: number, n: number) => `Экспорт ${i}/${n}...`,
-    statusPdf: (i: number, n: number) => `PDF ${i}/${n}...`,
-    footer: (w: number, h: number, n: number) =>
-      `${w}×${h}px — ${n} слайдов — Нажми на слайд для экспорта`,
-    modes: { carousel: "Карусель", presentation: "Презентация" } as Record<PurposeId, string>,
-    bgs: {
-      none: "Нет", blobs: "Пятна", grid: "Сетка", lines: "Линии",
-      noise: "Шум", bignumber: "Номер", glow: "Свечение", paper: "Линейка",
-    } as Record<BgType, string>,
-    surfaces: {
-      dark: "Тёмный", white: "Белый", light: "Светлый", paper: "Бумага",
-      gradient: "Градиент", pastel: "Пастель", neon: "Неон", ember: "Уголь",
-    } as Record<SurfaceId, string>,
-    accents: {
-      yellow: "Жёлтый", red: "Красный", teal: "Бирюза", coral: "Коралл",
-      orange: "Оранж", violet: "Фиолет", lime: "Лайм", blue: "Синий",
-      fuchsia: "Фуксия", pink: "Розовый", amber: "Янтарь",
-    } as Record<AccentId, string>,
-  },
 } as const;
 
 // ============================================================
@@ -1984,7 +1954,7 @@ const T = {
 // ============================================================
 
 export default function CarouselPage() {
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang] = useState<Lang>("en");
   const t = T[lang];
   const [fontId, setFontId] = useState<FontId>(DEFAULT_FONT);
   const [surfaceId, setSurfaceId] = useState<SurfaceId>(DEFAULT_SURFACE);
@@ -2144,7 +2114,7 @@ export default function CarouselPage() {
     <div suppressHydrationWarning style={{ minHeight: "100vh", padding: 32 }}>
       {/* Toolbar */}
       <div style={{ marginBottom: 32 }}>
-        {/* Title + Export + Lang toggle */}
+        {/* Title + Export */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
           <div>
             <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, textWrap: "balance" } as React.CSSProperties}>{t.appTitle}</h1>
@@ -2153,29 +2123,6 @@ export default function CarouselPage() {
             </div>
           </div>
           <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center" }}>
-            {/* Lang toggle */}
-            <div style={{ display: "flex", borderRadius: 8, overflow: "hidden", border: "1px solid #333" }}>
-              {(["en", "ru"] as Lang[]).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className="tb-btn"
-                  style={{
-                    padding: "9px 12px",
-                    minHeight: 36,
-                    border: "none",
-                    background: lang === l ? "#555" : "transparent",
-                    color: lang === l ? "#fff" : "#888",
-                    cursor: "pointer",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
             <button onClick={exportPdf} disabled={exporting} style={{ padding: "8px 20px", minWidth: 120, minHeight: 36, borderRadius: 8, border: "none", background: exporting ? "#444" : "#6366F1", color: "#fff", cursor: exporting ? "not-allowed" : "pointer", fontSize: 14, fontWeight: 600, fontVariantNumeric: "tabular-nums" }} className="tb-btn">
               {exporting ? exportStatus : t.btnPdf}
             </button>

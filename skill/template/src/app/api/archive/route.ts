@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     // keep metrics/post_url already filled by the user if re-archiving
     let previous: any = {};
     try { previous = JSON.parse(fs.readFileSync(metaPath, "utf8")); } catch {}
-    const full = { ...meta, metrics: previous.metrics ?? meta.metrics, post_url: previous.post_url ?? meta.post_url, notes: previous.notes ?? meta.notes };
+    const full: Record<string, any> = { ...meta, metrics: previous.metrics ?? meta.metrics, post_url: previous.post_url ?? meta.post_url, notes: previous.notes ?? meta.notes };
     fs.writeFileSync(metaPath, JSON.stringify(full, null, 2), "utf8");
 
     // index.csv (UTF-8 with BOM so Excel shows Hebrew)

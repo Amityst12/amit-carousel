@@ -4,8 +4,8 @@ user_invocable: true
 description: >
   Convert text posts into visual carousel images or presentations for Threads, Instagram, LinkedIn, TikTok, YouTube.
   12 slide types (incl. image/emoji/number), 6 format presets (incl. 1920×1080 wide), 8 background styles (incl. ruled paper), 3-axis style system (font × color × purpose), highlighted keywords with optional italic-box style.
-  Generates PNG or single-file PDF via Next.js preview + browser export. RU/EN toolbar.
-  Triggers: threads carousel, instagram carousel, linkedin carousel, tiktok carousel, карусель, slides, carousel images, presentation deck, presentation pdf.
+  Generates PNG or single-file PDF via Next.js preview + browser export.
+  Triggers: threads carousel, instagram carousel, linkedin carousel, tiktok carousel, slides, carousel images, presentation deck, presentation pdf.
 ---
 
 # Threads Carousel Generator
@@ -162,7 +162,7 @@ Ask once, combined:
 5. **Color** (8 palettes, default `dark`)
 6. **Handle** for CTA slide (e.g. `@username`)
 
-Shortcut: if user says "presentation" / "презентация" / "slide deck" → default to `purpose: presentation`, `format: wide-16x9`, `font: clean`, `color: white`.
+Shortcut: if user says "presentation" / "slide deck" → default to `purpose: presentation`, `format: wide-16x9`, `font: clean`, `color: white`.
 
 If user says "your call" — apply defaults, do not block.
 
@@ -302,5 +302,4 @@ The `presentation` purpose overrides titles to 72px / 700 / sentence case and bo
 
 - **Satori server-side export** — replace browser-based `html-to-image` with Satori + Resvg for CLI export (`bun run export → out/*.png`). Enables headless runs. See `Slashgear/linkedin-carousel-gen` for reference.
 - **Per-slide background override** — currently `DEFAULT_BG` is global; could accept a per-slide `bg` field to mix decorations across a deck.
-- **Cyrillic-optimized adaptive sizing** — current thresholds are calibrated for Latin; Russian copy tends to be 20–30% longer at the same font size.
 - **Pencil MCP mode** — previous skill version had a manual design mode via Pencil; not currently implemented in the template.
