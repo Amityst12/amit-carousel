@@ -1,0 +1,4 @@
+{
+  "driveHost": { "dir": "G:/My Drive/ig-publish", "publicFolderId": "PUT-THE-DRIVE-FOLDER-ID-HERE" },
+  "driveArchive": { "enabled": false, "dir": "G:/My Drive/MyCarouselArchive" }
+}

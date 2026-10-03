@@ -1,0 +1,23 @@
+# secrets — never commit
+.instagram.env
+.env
+config/ig-config.json
+
+# personal / generated data
+Published/
+analytics/
+transcripts/
+ig-queue/
+*-preview.png
+guides/
+
+# build
+node_modules/
+.next/
+
+# per-user setup (created by /amit-setup) — never commit someone's personal photo, stickers or brand file
+config/brand.md
+skill/template/public/images/avatar.png
+skill/template/public/images/stickers/*
+!skill/template/public/images/stickers/.gitkeep
+.claude/settings.local.json
