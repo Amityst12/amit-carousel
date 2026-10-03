@@ -141,6 +141,8 @@ bun dev --port 3333
 | `checklist`, `emoji` | רשימת סימון / אייקון ענק | ראו `types.ts` |
 | `cta` | שקף אחרון | `text`, `highlight`, `ctaLabel` ("עקבו" / "תגיבו ״מילה״"), `handle`, `subtitle`, `subtitleHighlight` |
 
+**צבעים:** המרקר, החצים והדקורציות (`decor`) נצבעים אוטומטית **בצבע הדגש שבחרתם** (`DEFAULT_ACCENT`). ב-`decor`, בלי `color` (או `color: "blue"`) = צבע הדגש שלכם; `dark` ו-`white` נשארים כפי שהם (לרקעים כהים).
+
 **שדות משותפים לכל שקף:** `badge` (תג קטן, "01"), `highlight` + `highlightStyle` (`marker` = מרקר בהיר; `brush-solid` = מכחול מלא לקריאה לפעולה), `sticker` + `stickerPos`, `decor[{name,color,w,top/left/right/bottom,rotate}]`, `arrow` (`false` = בלי חץ).
 
 **הערות:** `highlight` חייב להופיע בדיוק כפי שהוא בתוך הטקסט, ובשורה אחת (שורה חדשה בתוך הביטוי = המרקר לא יצויר). הימנעו מסוג `comparison` (אדום/ירוק קשיחים שמתנגשים עם המותג) — השתמשו ב-`stats`.

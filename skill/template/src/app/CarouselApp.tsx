@@ -1749,6 +1749,33 @@ function SlideInner({
 // Slides render right-to-left (Hebrew). `direction` is inherited by every slide type.
 // Also draws the account handle (and optional avatar) bottom-start on every slide except the CTA,
 // which already shows the handle.
+// SVG decor/arrows are drawn in the brand colour: the shipped blue assets (#3B82F6) are recoloured to the chosen accent at runtime (cached data URI;
+// the default blue accent uses the file as-is). Colours "dark" and "white" stay as they are.
+const svgCache = new Map<string, string>();
+function AccentSvg({ name, accent, style }: { name: string; accent: string; style: React.CSSProperties }) {
+  const base = `/images/svg/blue/${name}.svg`;
+  const same = accent.toLowerCase() === "#3b82f6";
+  const key = `${name}|${accent}`;
+  const [src, setSrc] = useState<string | null>(() => (same ? base : svgCache.get(key) ?? null));
+  useEffect(() => {
+    if (same) { setSrc(base); return; }
+    const hit = svgCache.get(key);
+    if (hit) { setSrc(hit); return; }
+    let alive = true;
+    fetch(base)
+      .then((r) => r.text())
+      .then((t) => {
+        const uri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(t.replace(/#3B82F6/gi, accent))}`;
+        svgCache.set(key, uri);
+        if (alive) setSrc(uri);
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [base, accent, key, same]);
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src ?? undefined} alt="" style={{ ...style, visibility: src ? "visible" : "hidden" }} />;
+}
+
 // five similar-but-different swipe arrows (assets: public/images/svg/<colour>/swipe-arrow*.svg) with small per-slide variations
 const ARROW_FILES = ["swipe-arrow", "swipe-arrow-3", "swipe-arrow-2", "swipe-arrow-4", "swipe-arrow-5"];
 const ARROW_W = [150, 160, 152, 150, 140];
@@ -1785,32 +1812,30 @@ function Slide(props: React.ComponentProps<typeof SlideInner>) {
           }}
         />
       )}
-      {data.decor?.map((d, i) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={i}
-          src={`/images/svg/${d.color || "blue"}/${d.name}.svg`}
-          alt=""
-          style={{
-            position: "absolute",
-            width: d.w ?? 160,
-            height: d.h ?? "auto",
-            top: d.top,
-            left: d.left,
-            right: d.right,
-            bottom: d.bottom,
-            opacity: d.opacity,
-            transform: `${d.flipX ? "scaleX(-1) " : ""}rotate(${d.rotate ?? 0}deg)`,
-            pointerEvents: "none",
-          }}
-        />
-      ))}
-      {autoArrow && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={`/images/svg/${arrowDark ? "white" : "blue"}/${ARROW_FILES[arrowIdx]}.svg`}
-          alt=""
-          style={{
+      {data.decor?.map((d, i) => {
+        const st: React.CSSProperties = {
+          position: "absolute",
+          width: d.w ?? 160,
+          height: d.h ?? "auto",
+          top: d.top,
+          left: d.left,
+          right: d.right,
+          bottom: d.bottom,
+          opacity: d.opacity,
+          transform: `${d.flipX ? "scaleX(-1) " : ""}rotate(${d.rotate ?? 0}deg)`,
+          pointerEvents: "none",
+        };
+        return !d.color || d.color === "blue" ? (
+          <AccentSvg key={i} name={d.name} accent={preset.highlightColor} style={st} />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={i} src={`/images/svg/${d.color}/${d.name}.svg`} alt="" style={st} />
+        );
+      })}
+      {autoArrow &&
+        (arrowDark ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={`/images/svg/white/${ARROW_FILES[arrowIdx]}.svg`} alt="" style={{
             position: "absolute",
             width: ARROW_W[arrowIdx % ARROW_W.length],
             height: "auto",
@@ -1818,9 +1843,18 @@ function Slide(props: React.ComponentProps<typeof SlideInner>) {
             bottom: ARROW_BOTTOM[arrowIdx % ARROW_BOTTOM.length],
             transform: `rotate(${ARROW_ROT[arrowIdx % ARROW_ROT.length]}deg)`,
             pointerEvents: "none",
-          }}
-        />
-      )}
+          }} />
+        ) : (
+          <AccentSvg name={ARROW_FILES[arrowIdx]} accent={preset.highlightColor} style={{
+            position: "absolute",
+            width: ARROW_W[arrowIdx % ARROW_W.length],
+            height: "auto",
+            right: ARROW_RIGHT[arrowIdx % ARROW_RIGHT.length],
+            bottom: ARROW_BOTTOM[arrowIdx % ARROW_BOTTOM.length],
+            transform: `rotate(${ARROW_ROT[arrowIdx % ARROW_ROT.length]}deg)`,
+            pointerEvents: "none",
+          }} />
+        ))}
       {showFooter && (
         <div
           style={{

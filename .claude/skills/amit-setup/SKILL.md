@@ -15,7 +15,7 @@ Never read, print or paste `.instagram.env` or any token. Details of every comma
 
 ## Step 1 — Get the tool running
 1. `bun --version`. Missing → tell them to install Bun from https://bun.sh (one command; on Windows PowerShell: `powershell -c "irm bun.sh/install.ps1 | iex"`), open a NEW terminal, continue.
-2. `cd skill/template && bun install` (once). Then start `bun dev --port 3333` in the background; confirm http://localhost:3333 answers and tell them to open it — they should see a sample carousel.
+2. `cd skill/template && bun install` (once). Then start `bun dev --port 3333` in the background (if 3333 is already used by another project, take the next free port and tell them the exact address); confirm it answers and tell them to open it — they should see a sample carousel.
 3. Python is needed only for stickers/YouTube: `python --version` (3.10+). If they want stickers and Python is missing, point them to python.org.
 
 ## Step 2 — Your brand (ask one at a time, offer defaults)
