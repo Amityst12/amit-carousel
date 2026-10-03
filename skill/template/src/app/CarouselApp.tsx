@@ -1914,7 +1914,7 @@ function SlidePreview({
 // I18N
 // ============================================================
 
-type Lang = "en";
+type Lang = "en" | "he";
 
 const T = {
   en: {
@@ -1947,6 +1947,36 @@ const T = {
       fuchsia: "Fuchsia", pink: "Pink", amber: "Amber",
     } as Record<AccentId, string>,
   },
+  he: {
+    appTitle: "Threads Carousel",
+    rowFont: "גופן",
+    rowSurface: "רקע",
+    rowAccent: "צבע דגש",
+    rowBg: "עיטור",
+    rowMode: "מצב",
+    rowFormat: "פורמט",
+    btnPdf: "ייצוא PDF",
+    btnAll: "ייצוא הכל",
+    statusDone: "בוצע!",
+    statusExport: (i: number, n: number) => `מייצא ${i}/${n}...`,
+    statusPdf: (i: number, n: number) => `PDF ${i}/${n}...`,
+    footer: (w: number, h: number, n: number) =>
+      `${w}×${h}px — ${n} שקפים — לחצו על שקף לייצוא בודד`,
+    modes: { carousel: "קרוסלה", presentation: "מצגת" } as Record<PurposeId, string>,
+    bgs: {
+      none: "ללא", blobs: "כתמים", grid: "רשת", lines: "קווים",
+      noise: "רעש", bignumber: "מספר גדול", glow: "זוהר", paper: "דפי שורות",
+    } as Record<BgType, string>,
+    surfaces: {
+      dark: "כהה", white: "לבן", light: "בהיר", paper: "נייר",
+      gradient: "גרדיאנט", pastel: "פסטל", neon: "ניאון", ember: "גחלים",
+    } as Record<SurfaceId, string>,
+    accents: {
+      yellow: "צהוב", red: "אדום", teal: "טורקיז", coral: "קורל",
+      orange: "כתום", violet: "סגול", lime: "ליים", blue: "כחול",
+      fuchsia: "פוקסיה", pink: "ורוד", amber: "ענבר",
+    } as Record<AccentId, string>,
+  },
 } as const;
 
 // ============================================================
@@ -1954,7 +1984,7 @@ const T = {
 // ============================================================
 
 export default function CarouselPage() {
-  const [lang] = useState<Lang>("en");
+  const [lang, setLang] = useState<Lang>("en");
   const t = T[lang];
   const [fontId, setFontId] = useState<FontId>(DEFAULT_FONT);
   const [surfaceId, setSurfaceId] = useState<SurfaceId>(DEFAULT_SURFACE);
@@ -2114,7 +2144,7 @@ export default function CarouselPage() {
     <div suppressHydrationWarning style={{ minHeight: "100vh", padding: 32 }}>
       {/* Toolbar */}
       <div style={{ marginBottom: 32 }}>
-        {/* Title + Export */}
+        {/* Title + Export + Lang toggle */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 20 }}>
           <div>
             <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, textWrap: "balance" } as React.CSSProperties}>{t.appTitle}</h1>
@@ -2123,6 +2153,29 @@ export default function CarouselPage() {
             </div>
           </div>
           <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center" }}>
+            {/* Lang toggle */}
+            <div style={{ display: "flex", borderRadius: 8, overflow: "hidden", border: "1px solid #333" }}>
+              {(["en", "he"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  className="tb-btn"
+                  style={{
+                    padding: "9px 12px",
+                    minHeight: 36,
+                    border: "none",
+                    background: lang === l ? "#555" : "transparent",
+                    color: lang === l ? "#fff" : "#888",
+                    cursor: "pointer",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
             <button onClick={exportPdf} disabled={exporting} style={{ padding: "8px 20px", minWidth: 120, minHeight: 36, borderRadius: 8, border: "none", background: exporting ? "#444" : "#6366F1", color: "#fff", cursor: exporting ? "not-allowed" : "pointer", fontSize: 14, fontWeight: 600, fontVariantNumeric: "tabular-nums" }} className="tb-btn">
               {exporting ? exportStatus : t.btnPdf}
             </button>
