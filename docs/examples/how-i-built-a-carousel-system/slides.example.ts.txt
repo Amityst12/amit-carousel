@@ -1,0 +1,110 @@
+// EXAMPLE carousel: "How I built a system that makes my carousels" — 6 slides, only 5 slide types (hook, number, process, list, cta).
+// A simple, easy-to-copy structure: hook -> second hook (number) -> how it works (process) -> two value slides (list) -> CTA with a keyword.
+// This is the exact src/slides.ts that produced overview.jpg (it uses the author's own avatar/stickers; yours come from /amit-setup).
+
+import type { SlideData, BgType, FormatId, FontId, SurfaceId, AccentId, PurposeId } from "./lib/types";
+
+export const SLIDES: SlideData[] = [
+  {
+    type: "hook",
+    heroName: "Claude Code",
+    heroIcon: "/images/claude.png",
+    text: "בניתי מערכת\nשעושה לי קרוסלות.\nאני רק שולח קישור.",
+    highlight: "אני רק שולח קישור.",
+    highlightStyle: "marker",
+    keyword: "״מדריך״",
+    subtitle: "תגיבו ״מדריך״ אם אתם רוצים שאכין\nמדריך מפורט איך לעשות את זה בעצמכם",
+    sticker: "wink",
+    stickerPos: "top-left",
+    decor: [{ name: "sparkles", w: 120, right: 70, top: 120 }],
+  },
+  {
+    type: "number",
+    badge: "01",
+    bigNumber: "187",
+    title: "דקות נחסכו ביומיים",
+    text: "11 קרוסלות, ולפי ההערכה שלי כל אחת חוסכת בממוצע 17 דקות.",
+    highlight: "17 דקות",
+    highlightStyle: "marker",
+    decor: [{ name: "clock", w: 170, left: 90, top: 120 }],
+  },
+  {
+    type: "process",
+    badge: "02",
+    title: "איך זה עובד",
+    steps: [
+      { title: "אני שולח חומר", text: "רילס, קישור, מסמך או צילום מסך" },
+      { title: "המערכת עושה את העבודה", text: "מתמללת, בודקת עובדות וכותבת" },
+      { title: "אני מאשר", text: "ורק אז זה נשמר בארכיון" },
+    ],
+    text: "ובסוף יש גם כיתוב מוכן.",
+    highlight: "כיתוב מוכן",
+    sticker: "idea",
+    stickerPos: "top-left",
+  },
+  {
+    type: "list",
+    badge: "03",
+    title: "הסוד: קובץ זיכרון",
+    sticker: "thumbsup",
+    decor: [{ name: "book", w: 150, left: 90, top: 110 }],
+    items: [
+      "כל תיקון שלי נכתב לקובץ הכללים",
+      "למשל: מקסימום 7 שקפים בקרוסלה",
+      "והיא לא חוזרת על אותה טעות",
+    ],
+  },
+  {
+    type: "list",
+    badge: "04",
+    title: "מה הוספתי בדרך",
+    sticker: "celebrate",
+    items: [
+      "ספריית איורים בצבעי המותג",
+      "סטיקרים מהקריקטורה שלי",
+      "תמלול אוטומטי של רילס ויוטיוב",
+    ],
+  },
+  {
+    type: "cta",
+    text: "תגיבו ״מדריך״\nואכין לכם מדריך מפורט\nאיך לעשות את זה בעצמכם.",
+    highlight: "תגיבו ״מדריך״",
+    ctaLabel: "תגיבו ״מדריך״",
+    subtitle: "ושלחו את זה למי שמבזבז זמן על תוכן",
+    subtitleHighlight: "ושלחו את זה",
+    sticker: "pointing",
+    stickerPos: "top-left",
+    decor: [{ name: "comment-bubble", w: 100, right: 80, bottom: 150 }, { name: "share", color: "blue", w: 62, right: 200, bottom: 154 }],
+  },
+];
+
+// Post metadata - used by the "📁 Archive" button (saves PNGs + this file + caption + meta to <project>/Published/).
+export const POST_META = {
+  slug: "how-i-built-my-carousel-system",
+  title: "איך בניתי מערכת שמכינה לי קרוסלות",
+  topic: "Behind the scenes: Claude Code + an open-source carousel generator + a rules file (CLAUDE.md) that remembers every correction; 11 carousels archived in two days; inputs: reels, links, documents, screenshots, YouTube",
+  type: "behind-the-scenes",
+  keyword: "מדריך",
+  guide: "guides/carousel-system-guide.md",
+  sources: [
+    "our own project: CLAUDE.md and Published/index.csv (11 archived carousels, 1-2.10.2026)",
+    "https://github.com/itchernetski/threads-carousel-claude-skill (the open-source generator the system is built on)",
+  ],
+  caption: `תגיבו ״מדריך״ ואכין לכם מדריך מפורט איך לבנות מערכת כזו בעצמכם.
+בניתי מערכת שעושה לי קרוסלות, ואני רק שולח קישור: היא מתמללת, בודקת עובדות וכותבת.`,
+};};
+
+// Account handle shown on every slide (U+200E keeps "@" on the left in RTL). "" to hide.
+export const HANDLE = "‎@amit.yehoshaphat";
+// Optional round avatar next to the handle, e.g. "/images/avatar.png" (drop the file in public/images/). null to hide.
+export const AVATAR_SRC: string | null = "/images/avatar.png";
+
+// Auto swipe arrow (bottom-right, a different hand-drawn variant per slide) on every slide except the last. false = off.
+export const AUTO_ARROW = true;
+
+export const DEFAULT_FONT: FontId = "hebrew";
+export const DEFAULT_SURFACE: SurfaceId = "light";
+export const DEFAULT_ACCENT: AccentId = "blue";
+export const DEFAULT_PURPOSE: PurposeId = "carousel";
+export const DEFAULT_BG: BgType = "lines";
+export const DEFAULT_FORMAT: FormatId = "threads-4x5";
