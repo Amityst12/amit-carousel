@@ -4,8 +4,15 @@ import { useRef, useState, useCallback, useEffect, ReactNode, createContext, use
 import { toPng, toJpeg } from "html-to-image";
 import type { SlideData, BgType, StylePreset, FontId, SurfaceId, AccentId, PurposeId, FormatId, HighlightStyle } from "../lib/types";
 import { BRUSH_W, BRUSH_H, BRUSH_CAP, BRUSH_PATHS } from "../lib/brush";
-import { FONT_STYLES, SURFACES, ACCENTS, composePreset, FORMAT_PRESETS } from "../lib/presets";
-import { SLIDES, POST_META, HANDLE, AVATAR_SRC, AUTO_ARROW, DEFAULT_FONT, DEFAULT_SURFACE, DEFAULT_ACCENT, DEFAULT_PURPOSE, DEFAULT_BG, DEFAULT_FORMAT } from "../slides";
+import { FONT_STYLES, SURFACES, ACCENTS, composePreset, applyBrandKit, FORMAT_PRESETS } from "../lib/presets";
+import { SLIDES as RAW_SLIDES, POST_META, HANDLE, AVATAR_SRC, AUTO_ARROW, DEFAULT_FONT, DEFAULT_SURFACE, DEFAULT_ACCENT, DEFAULT_PURPOSE, DEFAULT_BG, DEFAULT_FORMAT } from "../slides";
+import { BRAND_KIT, LOGO_SRC } from "../brand-kit";
+
+// Brand kit: the kit's highlight style replaces the default "marker" (explicit brush-solid / italic-box on a slide are kept).
+const KIT_HIGHLIGHT = BRAND_KIT?.highlightStyle;
+const SLIDES: SlideData[] = KIT_HIGHLIGHT
+  ? RAW_SLIDES.map((sl) => (!sl.highlightStyle || sl.highlightStyle === "marker" ? { ...sl, highlightStyle: KIT_HIGHLIGHT } : sl))
+  : RAW_SLIDES;
 
 const CANVAS_W = FORMAT_PRESETS[DEFAULT_FORMAT].w;
 const CANVAS_H = FORMAT_PRESETS[DEFAULT_FORMAT].h;
@@ -836,6 +843,10 @@ function SlideBody({
           alt=""
           style={{ width: 168, height: 168, borderRadius: "50%", objectFit: "cover", marginBottom: 48, position: "relative", border: `6px solid ${preset.highlightColor}` }}
         />
+      )}
+      {data.type === "cta" && LOGO_SRC && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={LOGO_SRC} alt="" style={{ position: "absolute", top: 70, right: 70, height: 84, maxWidth: 260, objectFit: "contain" }} />
       )}
       {data.badge && <Badge text={data.badge} preset={preset} />}
       {data.title && data.bigTitle && (
@@ -1786,11 +1797,12 @@ const ARROW_ROT = [-2, 3, -4, 2, -3];
 function Slide(props: React.ComponentProps<typeof SlideInner>) {
   const { w, h } = useCanvasSize();
   const { preset, data } = props;
-  const showFooter = (HANDLE || AVATAR_SRC) && data.type !== "cta";
+  const showFooter = (HANDLE || AVATAR_SRC || LOGO_SRC) && data.type !== "cta";
   // swipe arrow on every slide except the last/CTA; the variant rotates with the slide index (slide-level `arrow` overrides: false = none, number = fixed variant)
   const autoArrow = AUTO_ARROW && data.arrow !== false && data.type !== "cta" && props.index < props.total - 1;
   const arrowIdx = typeof data.arrow === "number" ? data.arrow % ARROW_FILES.length : props.index % ARROW_FILES.length;
   const arrowDark = relLuminance(preset.bg) < 0.35;
+  const brand = BRAND_KIT && preset.id.startsWith("brand-") ? BRAND_KIT : null;
   return (
     <div dir="rtl" style={{ direction: "rtl", position: "relative", width: w, height: h }}>
       <SlideInner {...props} />
@@ -1825,7 +1837,10 @@ function Slide(props: React.ComponentProps<typeof SlideInner>) {
           transform: `${d.flipX ? "scaleX(-1) " : ""}rotate(${d.rotate ?? 0}deg)`,
           pointerEvents: "none",
         };
-        return !d.color || d.color === "blue" ? (
+        return d.color === "brand" || (brand && (!d.color || d.color === "blue")) ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={i} src={`/images/svg/brand/${d.name}.svg`} alt="" style={st} />
+        ) : !d.color || d.color === "blue" ? (
           <AccentSvg key={i} name={d.name} accent={preset.highlightColor} style={st} />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
@@ -1833,7 +1848,18 @@ function Slide(props: React.ComponentProps<typeof SlideInner>) {
         );
       })}
       {autoArrow &&
-        (arrowDark ? (
+        (brand ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={`/images/svg/brand/${brand.arrows[arrowIdx % brand.arrows.length]}.svg`} alt="" style={{
+            position: "absolute",
+            width: ARROW_W[arrowIdx % ARROW_W.length],
+            height: "auto",
+            right: ARROW_RIGHT[arrowIdx % ARROW_RIGHT.length],
+            bottom: ARROW_BOTTOM[arrowIdx % ARROW_BOTTOM.length],
+            transform: `rotate(${ARROW_ROT[arrowIdx % ARROW_ROT.length]}deg)`,
+            pointerEvents: "none",
+          }} />
+        ) : arrowDark ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={`/images/svg/white/${ARROW_FILES[arrowIdx]}.svg`} alt="" style={{
             position: "absolute",
@@ -1875,6 +1901,10 @@ function Slide(props: React.ComponentProps<typeof SlideInner>) {
             <img src={AVATAR_SRC} alt="" style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover" }} />
           )}
           {HANDLE && <span style={{ direction: "ltr" }}>{HANDLE}</span>}
+          {LOGO_SRC && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={LOGO_SRC} alt="" style={{ height: 52, maxWidth: 160, objectFit: "contain", marginInlineStart: 6 }} />
+          )}
         </div>
       )}
     </div>
@@ -1954,6 +1984,9 @@ const T = {
   en: {
     appTitle: "Threads Carousel",
     rowFont: "Font",
+    rowBrand: "Brand kit",
+    brandKitOn: "On: my palette, font and SVGs",
+    brandKitOff: "Off (manual pickers)",
     rowSurface: "Surface",
     rowAccent: "Accent",
     rowBg: "Background",
@@ -1984,6 +2017,9 @@ const T = {
   he: {
     appTitle: "Threads Carousel",
     rowFont: "גופן",
+    rowBrand: "ערכת מותג",
+    brandKitOn: "פעילה: הפלטה, הפונט וה-SVG שלי",
+    brandKitOff: "כבויה (בחירה ידנית)",
     rowSurface: "רקע",
     rowAccent: "צבע דגש",
     rowBg: "עיטור",
@@ -2020,7 +2056,8 @@ const T = {
 export default function CarouselPage() {
   const [lang, setLang] = useState<Lang>("en");
   const t = T[lang];
-  const [fontId, setFontId] = useState<FontId>(DEFAULT_FONT);
+  const [brandOn, setBrandOn] = useState<boolean>(!!BRAND_KIT);
+  const [fontId, setFontId] = useState<FontId>(BRAND_KIT?.font ?? DEFAULT_FONT);
   const [surfaceId, setSurfaceId] = useState<SurfaceId>(DEFAULT_SURFACE);
   const [accentId, setAccentId] = useState<AccentId>(DEFAULT_ACCENT);
   const [purposeId, setPurposeId] = useState<PurposeId>(DEFAULT_PURPOSE);
@@ -2034,7 +2071,8 @@ export default function CarouselPage() {
 
   const canvasW = FORMAT_PRESETS[formatId].w;
   const canvasH = FORMAT_PRESETS[formatId].h;
-  const preset = composePreset(FONT_STYLES[fontId], SURFACES[surfaceId], ACCENTS[accentId], purposeId);
+  const basePreset = composePreset(FONT_STYLES[fontId], SURFACES[surfaceId], ACCENTS[accentId], purposeId);
+  const preset = BRAND_KIT && brandOn ? applyBrandKit(basePreset, BRAND_KIT) : basePreset;
 
   const captureSlide = useCallback(
     async (index: number): Promise<string | null> => {
@@ -2237,6 +2275,16 @@ export default function CarouselPage() {
               ))}
             </div>
           </div>
+
+          {/* Brand kit */}
+          {BRAND_KIT && (
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 11, color: "#666", width: 90, flexShrink: 0 }}>{t.rowBrand}</span>
+              <button onClick={() => setBrandOn(!brandOn)} style={{ padding: "9px 14px", minHeight: 36, borderRadius: 8, border: brandOn ? `2px solid ${BRAND_KIT.accent}` : "1px solid #333", background: brandOn ? BRAND_KIT.accent : "transparent", color: brandOn ? "#000" : "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }} className="tb-btn">
+                {brandOn ? t.brandKitOn : t.brandKitOff}
+              </button>
+            </div>
+          )}
 
           {/* Mode */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

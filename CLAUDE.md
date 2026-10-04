@@ -3,7 +3,7 @@
 Instagram carousel factory (1080×1350, Hebrew/RTL friendly) by Amit Yehoshaphat (https://www.instagram.com/amit.yehoshaphat/). A Next.js generator in `skill/template/` (content in `skill/template/src/slides.ts`), helper scripts in `scripts/`, two project skills in `.claude/skills/`. Full user documentation: `README.md` (Hebrew). Read it instead of guessing commands.
 
 ## Skills (use them)
-- **`/amit-setup`** — one-time setup: install + start the tool, brand (handle, language, audience, colour, avatar), your own cartoon stickers (AI prompt + `scripts/cut-stickers.py`), optional Instagram connection. **If `config/brand.md` does not exist, the user has not done setup: suggest `/amit-setup` first** (warmly, offer to start it).
+- **`/amit-setup`** — one-time setup (7 steps, never more than 8): install + start the tool, brand (handle, language, audience), **brand kit** (palette, fonts, highlight style + 10 personal SVGs via `scripts/brand-kit.mjs`), avatar + optional logo, your own cartoon stickers (AI prompt + `scripts/cut-stickers.py`), optional Instagram connection. **If `config/brand.md` does not exist, the user has not done setup: suggest `/amit-setup` first** (warmly, offer to start it).
 - **`/amit-carousel`** — make a carousel from a topic/link/screenshot/reel: research → propose slide order → build → check → export → archive.
 
 ## Run
@@ -16,6 +16,7 @@ Check before saying "ready": `bun scripts/check-carousel.mjs` and LOOK at every 
 - **Max 7 slides.** Hook → second hook (slide 2, with `teaser`) → retain → **reward on slides 4–5** → (caveat only for a real limit) → CTA. CTA: ≤1 ask on the hook, ≤2 on the last slide (icons count). Plain language, short sentences, one marker per slide.
 - **Caption: exactly 2 lines**, no hashtags by default, every line starts with a word in the post's language, ≤ ~70 chars per line. Keyword posts: keyword ask first, with what they get; the free thing is a short verified guide in `guides/`.
 - Hebrew: no niqqud; Latin only for product names; wrap English commands in U+2066…U+2069; handle prefixed with U+200E; image captions start with Hebrew.
+- Brand kit (`skill/template/src/brand-kit.ts`, not null): palette/font/highlight are fixed for every carousel — don't override them; `decor` uses `color: "brand"` (names in `BRAND_KIT.svgs`).
 - Stickers: 2–4 per carousel, only names that exist in `skill/template/public/images/stickers/`; `top-left` on the hook and CTA.
 - Published carousels are never rewritten; before a new carousel save the current `slides.ts` to `skill/template/carousels-archive/<name>.slides.ts.txt`.
 

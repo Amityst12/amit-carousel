@@ -18,6 +18,8 @@ node_modules/
 # per-user setup (created by /amit-setup) — never commit someone's personal photo, stickers or brand file
 config/brand.md
 skill/template/public/images/avatar.png
+skill/template/public/images/logo.*
+skill/template/public/images/svg/brand/
 skill/template/public/images/stickers/*
 !skill/template/public/images/stickers/.gitkeep
 .claude/settings.local.json

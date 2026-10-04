@@ -4,11 +4,11 @@
 // corner, content ending above y≈1085) can't be done here: still render the gallery and look at it.
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TPL = path.join(ROOT, "skill", "template");
-const mod = await import(path.join(TPL, "src", "slides.ts"));
+const mod = await import(pathToFileURL(path.join(TPL, "src", "slides.ts")).href);
 const { SLIDES, POST_META, HANDLE } = mod;
 
 const errors = [], warns = [];

@@ -20,6 +20,7 @@ import type {
   AccentId,
   Accent,
   PurposeId,
+  BrandKit,
 } from "./types";
 
 // ---- Font styles ----
@@ -60,6 +61,11 @@ export const FONT_STYLES: Record<FontId, FontStyle> = {
     fontFamily: "var(--font-heebo)",
     hookFontFamily: "var(--font-heebo)",
   },
+  // Hebrew-capable alternatives (used by brand kits)
+  rubik: { id: "rubik", name: "Rubik", fontFamily: "var(--font-rubik)", hookFontFamily: "var(--font-rubik)" },
+  secular: { id: "secular", name: "Secular One", fontFamily: "var(--font-heebo)", hookFontFamily: "var(--font-secular)" },
+  frank: { id: "frank", name: "Frank Ruhl", fontFamily: "var(--font-frank)", hookFontFamily: "var(--font-frank)" },
+  suez: { id: "suez", name: "Suez One", fontFamily: "var(--font-heebo)", hookFontFamily: "var(--font-suez)" },
   // Narrow tall condensed — Oswald. Editorial-poster feel.
   condensed: {
     id: "condensed",
@@ -250,3 +256,23 @@ export const FORMAT_PRESETS: Record<FormatId, FormatPreset> = {
     platform: "Presentations, YouTube, Desktop",
   },
 };
+
+// ---- Brand kit: the user's own palette + font override the surface/accent/font axes, so every carousel looks the same ----
+
+export function applyBrandKit(preset: StylePreset, kit: BrandKit): StylePreset {
+  const font = FONT_STYLES[kit.font];
+  return {
+    ...preset,
+    id: `brand-${kit.name}`,
+    name: `Brand / ${kit.name}`,
+    bg: kit.bg,
+    bgGradient: undefined,
+    textColor: kit.text,
+    textSecondary: kit.textSecondary,
+    accentColor: kit.text,
+    highlightColor: kit.accent,
+    fontFamily: font.fontFamily,
+    hookFontFamily: font.hookFontFamily,
+    bodyColor: preset.bodyColor ? kit.textSecondary : preset.bodyColor,
+  };
+}

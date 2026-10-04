@@ -43,7 +43,7 @@ export type FormatId =
 // ---- Three independent style axes ----
 
 /** Font / typeface selection */
-export type FontId = "minimal" | "editorial" | "clean" | "mono" | "condensed" | "hebrew";
+export type FontId = "minimal" | "editorial" | "clean" | "mono" | "condensed" | "hebrew" | "rubik" | "secular" | "frank" | "suez";
 
 /** Surface — bg + text neutrals (no pop color). */
 export type SurfaceId =
@@ -91,6 +91,22 @@ export interface Surface {
   accentColor: string;
 }
 
+/** Personal brand kit (src/brand-kit.ts, written by scripts/brand-kit.mjs): palette + font + highlight + its own SVG set in public/images/svg/brand/. */
+export interface BrandKit {
+  name: string;
+  accent: string;
+  accent2: string;
+  bg: string;
+  text: string;
+  textSecondary: string;
+  font: FontId;
+  highlightStyle: "marker" | "brush-solid" | "italic-box";
+  /** Names of the generated SVGs (public/images/svg/brand/<name>.svg), usable in `decor` with color: "brand". */
+  svgs: string[];
+  /** Swipe-arrow variants (subset of svgs) used automatically. */
+  arrows: string[];
+}
+
 export interface Accent {
   id: AccentId;
   name: string;
@@ -116,7 +132,7 @@ export interface SlideData {
   sticker?: string;
   // any slide — repeating brand SVG decorations from /public/images/svg/<color>/<name>.svg, absolutely positioned on the 1080x1350 canvas
   // names: swipe-arrow, curved-arrow, underline, circle-highlight, starburst, bookmark, share, gift, sparkles, comment-bubble
-  decor?: { name: string; color?: "blue" | "dark" | "white"; w?: number; h?: number; top?: number; left?: number; right?: number; bottom?: number; rotate?: number; flipX?: boolean; opacity?: number }[];
+  decor?: { name: string; color?: "blue" | "dark" | "white" | "brand"; w?: number; h?: number; top?: number; left?: number; right?: number; bottom?: number; rotate?: number; flipX?: boolean; opacity?: number }[];
   stickerPos?: "bottom-left" | "top-left" | "bottom-right";
   // hook slide — small line under the headline explaining what the carousel covers
   subtitle?: string;

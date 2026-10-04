@@ -9,7 +9,7 @@
 ---
 
 ## ⚡ התחילו כאן: `/amit-setup`
-**אחרי שהורדתם את הרפו, הדבר הראשון שכדאי לעשות הוא להריץ את הסקיל `/amit-setup`.** הוא מלווה אתכם ב-5 דקות, שלב אחרי שלב: מתקין ומפעיל את הכלי, מגדיר את ה-@ והצבע שלכם, מכין תמונת פרופיל, **מלמד אתכם ליצור סטיקרים משלכם עם מודל AI לבחירתכם** (פרומפט מוכן + חיתוך אוטומטי), ואופציונלית מחבר את האינסטגרם שלכם (חשבון **מקצועי** בלבד).
+**אחרי שהורדתם את הרפו, הדבר הראשון שכדאי לעשות הוא להריץ את הסקיל `/amit-setup`.** הוא מלווה אתכם ב-7 שלבים קצרים, שלב אחרי שלב: מתקין ומפעיל את הכלי, מגדיר את ה-@ שלכם, **בונה לכם ערכת מותג משלכם** (פלטה, פונטים, סגנון הדגשה ו-10 קישוטי SVG ייחודיים שנוצרים בשבילכם), מכין תמונת פרופיל (ולוגו, אם תרצו), **מלמד אתכם ליצור סטיקרים משלכם עם מודל AI לבחירתכם** (פרומפט מוכן + חיתוך אוטומטי), ואופציונלית מחבר את האינסטגרם שלכם (חשבון **מקצועי** בלבד).
 איך: פתחו את תיקיית הפרויקט ב-[Claude Code](https://claude.com/claude-code) (שורת פקודה או אפליקציית Desktop). הסקילים בתיקייה `.claude/skills/` נטענים אוטומטית. כתבו `/amit-setup`, ואחר כך `/amit-carousel תכין לי קרוסלה על …`.
 בלי Claude Code? הכלי עובד גם ידנית, ראו "התקנה מהירה" ו"דרך ב׳".
 
@@ -46,7 +46,7 @@
 - **13 סוגי שקפים**: hook, body, list, stats, quote, checklist, process, number, emoji, image, bars, cta, ועוד.
 - **מרקר מכחול (brush)** שמדגיש ביטויים, **חצי החלקה** מצוירים, **דקורציות SVG** (3 צבעים), סטיקרים (אופציונלי), נקודות מיקום שקף, פוטר עם אווטאר ו-@.
 - **בודק חוקים** (`scripts/check-carousel.mjs`): מקסימום 7 שקפים, מבנה Hook→CTA, מילת מפתח, כיתוב בשתי שורות, קריאות, ועוד.
-- **שני סקילים ל-Claude Code:** `/amit-setup` (הגדרה חד-פעמית: התקנה, המותג שלכם, סטיקרים, חיבור אינסטגרם) ו-`/amit-carousel` (מחקר ואימות עובדות, כתיבה לפי נוסחת Hook/Retain/Reward/CTA, בדיקה וייצוא).
+- **שני סקילים ל-Claude Code:** `/amit-setup` (הגדרה חד-פעמית: התקנה, המותג שלכם + ערכת מותג, סטיקרים, חיבור אינסטגרם) ו-`/amit-carousel` (מחקר ואימות עובדות, כתיבה לפי נוסחת Hook/Retain/Reward/CTA, בדיקה וייצוא).
 - **אופציונלי:** ארכיון מסודר עם נתוני מדידה, פרסום לאינסטגרם דרך ה-API הרשמי (פקודה אחת), תזמון עם Claude, אנליטיקה, העתקה ל-Google Drive, תמלול YouTube.
 
 ## דוגמה: קרוסלה מוכנה שקל להכין
@@ -108,6 +108,15 @@ bun dev --port 3333
 | חץ החלקה אוטומטי | `AUTO_ARROW` | חץ מצויר בפינה על כל שקף חוץ מהאחרון. |
 
 **התחלה נקייה:** הסקיל `/amit-setup` עושה את זה בשבילכם. ידנית: העתיקו את `skill/template/starter/slides.starter.ts.txt` מעל `skill/template/src/slides.ts` — קרוסלת דוגמה של 5 שקפים שלא צריכה אף קובץ תמונה.
+
+### ערכת מותג (כדי שהקרוסלות שלכם לא ייראו כמו של כולם)
+`/amit-setup` (שלב 3) מראיין אתכם בקצרה ויוצר ערכה אישית: **פלטה** (דגש, דגש משני, רקע, טקסט), **גופן** (גם לעברית: `hebrew`, `rubik`, `secular`, `frank`, `suez`), **סגנון הדגשה** (`marker` / `brush-solid` / `italic-box`) ו-**10 קישוטי SVG** שמצוירים בצבעים ובסגנון שלכם (`rounded` / `sharp` / `organic` / `playful`), ייחודיים לכם לפי ה-`--seed`: שלושה חצי החלקה, חץ מעוקל, קו תחתון, עיגול, כוכב, ניצוצות, גל ונקודות. הערכה חלה אוטומטית על כל קרוסלה, וכפתור **Brand kit** בכלי מכבה/מדליק אותה.
+ידנית, אפשר גם בלי הסקיל:
+```bash
+node scripts/brand-kit.mjs --name "Dana" --accent "#E8452C" --accent2 "#FFC857" --bg "#FFF6E9" --text "#1F1A17" \
+  --font rubik --highlight marker --style organic --seed "@dana.cooks" [--logo /images/logo.png]
+```
+נכתבים `skill/template/src/brand-kit.ts` ו-`skill/template/public/images/svg/brand/*.svg`. הסקריפט מדפיס אזהרות ניגודיות, וב-`.../svg/brand/preview.html` (על שרת הפיתוח) רואים את כל הסט. ב-`decor` משתמשים ב-`color: "brand"`. להסרה: `node scripts/brand-kit.mjs --reset`. לוגו (אופציונלי, PNG/SVG שקוף ב-`public/images/`): `--logo /images/logo.png`, מופיע בפוטר ובשקף ה-CTA.
 
 ## יצירת קרוסלה
 ### דרך א׳: עם Claude Code (מומלץ)
@@ -275,6 +284,7 @@ python scripts/yt-transcribe.py "<url>" [--lang en|he|auto] [--force-audio]
 │  ├─ SKILL.md                    תיעוד המנוע המקורי (סוגי שקפים ושדות)
 │  └─ template/                   אפליקציית Next.js (המחולל)
 │     ├─ src/slides.ts            ← כאן הכול: השקפים, ה-@, ההגדרות, POST_META
+│     ├─ src/brand-kit.ts         (נוצר ע"י scripts/brand-kit.mjs) ערכת המותג: פלטה, גופן, לוגו
 │     ├─ src/app/CarouselApp.tsx  המנוע והעיצוב
 │     ├─ src/lib/                 טיפוסים, פריסטים, מכחולים
 │     ├─ public/images/           svg/, logos/, stickers/ + התמונות שלכם
@@ -295,6 +305,7 @@ python scripts/yt-transcribe.py "<url>" [--lang en|he|auto] [--force-audio]
 ├─ config/                        ig-config.example.json (העתיקו ל-ig-config.json)
 ├─ Assets/                        מקורות: logos/, graphics/, screenshots/, people/
 ├─ config/brand.md                (נוצר ע"י /amit-setup) המותג שלכם
+├─ scripts/brand-kit.mjs          יוצר את ערכת המותג + 10 קישוטי SVG אישיים
 ├─ guides/                        (נוצר) מדריכי "מילת מפתח" שאתם כותבים
 ├─ Published/                     (נוצר) הארכיון + index.csv
 ├─ analytics/, transcripts/       (נוצרים) נתוני מדידה ותמלולים
